@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/@tabler/core@1.3.2/dist/css/tabler.min.css" />
+  <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+  <script src="https://unpkg.com/htmx-ext-ws@2.0.2"></script>
+  <link rel="shortcut icon" href="static/favicon.ico" type="image/x-icon">
+</head>
+<body>
+  <div hx-ext="ws" ws-connect="/ws" id="broadcast-box"></div>
+
+  <div class="page">
+    <div class="page-wrapper">
+      <div class="page-body">
+        <div class="container">
+          <div class="row">
+            <button
+              hx-post="/"
+              hx-swap="none"
+              class="btn"
+            >
+              add
+            </button>
+          </div>
+          <div class="row row-cards">
+            <div class="card">
+              <div class="table-responsive">
+                <table class="table table-vcenter card-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>description</th>
+                      <th class="w-1"></th>
+                    </tr>
+                  </thead>
+                  <tbody id="{{ model_name }}_table">
+                    {% for record in records %}
+                      {% include '_foo.html' %}
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script
+    src="https://cdn.jsdelivr.net/npm/@tabler/core@1.3.2/dist/js/tabler.min.js">
+  </script>
+</body>
+</html>
