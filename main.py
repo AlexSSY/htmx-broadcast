@@ -6,25 +6,23 @@ from connection_manager import manager
 import htmx
 
 
-@app.get('/')
+@app.get("/")
 def home(request: Request):
-    foo_records = crud.foo_list(sort=('id', 'desc'))
-    context = {
-        'records': foo_records,
-        'model_name': 'Foo'
-    }
-    return templating.TemplateResponse(request, 'home.html', context)
+    foo_records = crud.foo_list(sort=("id", "desc"))
+    context = {"records": foo_records, "model_name": "Foo"}
+    return templating.TemplateResponse(request, "home.html", context)
 
 
-@app.post('/')
+@app.post("/")
 async def add_random(request: Request):
     instance = crud.foo_add_random()
-    context = {
-        'record': instance,
-        'model_name': 'Foo'
-    }
-    foo_partial_html = templating.get_template('_foo.html').render(context)
-    await htmx.prepend(foo_partial_html, 'Foo_table', manager)
+    context = {"record": instance, "model_name": "Foo"}
+    await htmx.broadcast_prepend_to(
+        target_id="Foo_table",
+        template_name="_foo.html",
+        context=context,
+        target_tag="tbody",
+    )
 
 
 @app.websocket("/ws")

@@ -1,3 +1,6 @@
 fastapi
 uvicorn
 sqlalchemy
+faker
+jinja2
+websockets
