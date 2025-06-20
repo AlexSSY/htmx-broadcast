@@ -26,12 +26,13 @@ def foo_add_random() -> Foo | None:
         return new_instance
 
 
-def foo_delete(id) -> bool:
+def foo_delete(id) -> Foo | None:
     with SessionLocal() as db:
-        db.query(Foo).where(Foo.id == id).delete(synchronize_session=False)
+        # db.query(Foo).where(Foo.id == id).delete(synchronize_session=False)
+        instance = db.get(Foo, id)
+        db.delete(instance)
         db.commit()
-        return True
-    return False
+        return instance
 
 
 def foo_update(id, name, description) -> Foo | None:

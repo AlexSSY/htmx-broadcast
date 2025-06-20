@@ -4,6 +4,7 @@ from templating import templating
 import crud
 from connection_manager import manager
 import htmx
+import helpers
 
 
 @app.get("/")
@@ -27,8 +28,9 @@ async def add_random(request: Request):
 
 @app.post("/delete/{id}/", name="delete")
 async def delete(id: int):
-    if crud.foo_delete(id):
-        await htmx.broadcast_delete_to(f'Foo_{id}')
+    instance = crud.foo_delete(id)
+    if instance:
+        await htmx.broadcast_delete_to(helpers.get_id(instance))
 
 
 @app.post("/update/{id}/", name="update")
@@ -37,7 +39,7 @@ async def update(request: Request, id: int):
     if instance:
         context = {"record": instance, "model_name": "Foo", "request": request}
         await htmx.broadcast_update_to(
-            target_id=f'Foo_{id}',
+            target_id=helpers.get_id(instance),
             template_name="_foo.html",
             context=context,
             target_tag="tbody",
