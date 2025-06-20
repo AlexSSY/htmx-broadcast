@@ -1,4 +1,3 @@
-from markupsafe import Markup
 from functools import partial
 from templating import render_to_string
 from connection_manager import manager
@@ -11,3 +10,7 @@ async def broadcast_to(*, target_id, template_name, context, swap_oob, manager, 
 
 
 broadcast_prepend_to = partial(broadcast_to, swap_oob='afterbegin', manager=manager)
+
+
+async def broadcast_delete_to(target_id, manager=manager):
+    await manager.broadcast(f'<div id="{target_id}" hx-swap-oob="delete"></div>')

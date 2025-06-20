@@ -3,6 +3,10 @@
   <td class="text-secondary">{{ record.name }}</td>
   <td class="text-secondary">{{ record.description }}</td>
   <td>
-    <a href="#">Del</a>
+    <button
+      class="btn btn-outline-danger"
+      hx-post="{{ request.url_for('delete', id=record.id) }}"
+      hx-swap="none"
+    >Del</button>
   </td>
 </tr>

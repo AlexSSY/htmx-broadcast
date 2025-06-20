@@ -16,13 +16,19 @@ def home(request: Request):
 @app.post("/")
 async def add_random(request: Request):
     instance = crud.foo_add_random()
-    context = {"record": instance, "model_name": "Foo"}
+    context = {"record": instance, "model_name": "Foo", "request": request}
     await htmx.broadcast_prepend_to(
         target_id="Foo_table",
         template_name="_foo.html",
         context=context,
         target_tag="tbody",
     )
+
+
+@app.post("/delete/{id}/", name="delete")
+async def delete(id: int):
+    if crud.foo_delete(id):
+        await htmx.broadcast_delete_to(f'Foo_{id}')
 
 
 @app.websocket("/ws")
