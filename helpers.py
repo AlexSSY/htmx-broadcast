@@ -1,4 +1,4 @@
-def get_id(obj, prefix=None):
+def dom_id(obj, prefix=None):
     """
     returns model's unique DOM id
     """

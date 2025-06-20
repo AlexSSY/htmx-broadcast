@@ -30,7 +30,7 @@ async def add_random(request: Request):
 async def delete(id: int):
     instance = crud.foo_delete(id)
     if instance:
-        await htmx.broadcast_delete_to(helpers.get_id(instance))
+        await htmx.broadcast_delete_to(helpers.dom_id(instance))
 
 
 @app.post("/update/{id}/", name="update")
@@ -39,7 +39,7 @@ async def update(request: Request, id: int):
     if instance:
         context = {"record": instance, "model_name": "Foo", "request": request}
         await htmx.broadcast_update_to(
-            target_id=helpers.get_id(instance),
+            target_id=helpers.dom_id(instance),
             template_name="_foo.html",
             context=context,
             target_tag="tbody",
