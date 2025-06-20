@@ -1,12 +1,19 @@
 from faker import Faker
+from sqlalchemy import asc, desc
 
 from models import Foo
 from db import SessionLocal
 
 
-def foo_list(offset = 0, limit = 100) -> list[Foo]:
+def foo_list(offset = 0, limit = 100, sort=('id', 'asc')) -> list[Foo]:
     with SessionLocal() as db:
-        return db.query(Foo).offset(offset).limit(limit).all()
+        query = db.query(Foo)
+        
+        if sort[0] in Foo.__table__.columns:
+            column = getattr(Foo, sort[0])
+            query = query.order_by(desc(column) if sort[1] == "desc" else asc(column))
+        
+        return query.offset(offset).limit(limit)
 
 
 faker = Faker()
@@ -17,3 +24,11 @@ def foo_add_random() -> Foo | None:
         db.commit()
         db.refresh(new_instance)
         return new_instance
+
+
+def foo_delete(id) -> bool:
+    with SessionLocal() as db:
+        db.query(Foo).where(Foo.id == id).delete(synchronize_session=False)
+        db.commit()
+        return True
+    return False

@@ -3,12 +3,12 @@ from app import app
 from templating import templating
 import crud
 from connection_manager import manager
-from markupsafe import Markup
+import htmx
 
 
 @app.get('/')
 def home(request: Request):
-    foo_records = crud.foo_list()
+    foo_records = crud.foo_list(sort=('id', 'desc'))
     context = {
         'records': foo_records,
         'model_name': 'Foo'
@@ -24,8 +24,7 @@ async def add_random(request: Request):
         'model_name': 'Foo'
     }
     foo_partial_html = templating.get_template('_foo.html').render(context)
-    html = f'<div id="insert_Foo_{instance.id}" hx-swap-oob="afterbegin:#Foo_table">{foo_partial_html}</div>'
-    await manager.broadcast(Markup(html))
+    await htmx.prepend(foo_partial_html, 'Foo_table', manager)
 
 
 @app.websocket("/ws")
