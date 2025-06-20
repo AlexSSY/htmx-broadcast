@@ -31,6 +31,19 @@ async def delete(id: int):
         await htmx.broadcast_delete_to(f'Foo_{id}')
 
 
+@app.post("/update/{id}/", name="update")
+async def update(request: Request, id: int):
+    instance = crud.foo_update(id, name='Rosa', description='Mose')
+    if instance:
+        context = {"record": instance, "model_name": "Foo", "request": request}
+        await htmx.broadcast_update_to(
+            target_id=f'Foo_{id}',
+            template_name="_foo.html",
+            context=context,
+            target_tag="tbody",
+        )
+
+
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
     await manager.connect(websocket)

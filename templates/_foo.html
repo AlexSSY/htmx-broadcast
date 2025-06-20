@@ -4,9 +4,16 @@
   <td class="text-secondary">{{ record.description }}</td>
   <td>
     <button
-      class="btn btn-outline-danger"
+      class="btn btn-sm btn-outline-primary"
+      hx-post="{{ request.url_for('update', id=record.id) }}"
+      hx-swap="none"
+    >Update</button>
+  </td>
+  <td>
+    <button
+      class="btn btn-sm btn-outline-danger"
       hx-post="{{ request.url_for('delete', id=record.id) }}"
       hx-swap="none"
-    >Del</button>
+    >Delete</button>
   </td>
 </tr>

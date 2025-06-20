@@ -32,3 +32,13 @@ def foo_delete(id) -> bool:
         db.commit()
         return True
     return False
+
+
+def foo_update(id, name, description) -> Foo | None:
+    with SessionLocal() as db:
+        foo = db.get(Foo, id)
+        foo.name = name
+        foo.description = description
+        db.commit()
+        db.refresh(foo)
+        return foo
